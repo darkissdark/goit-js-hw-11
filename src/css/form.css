@@ -1,0 +1,10 @@
+.form {
+  max-width: 360px;
+  margin: 32px auto;
+  display: flex;
+}
+
+.form label {
+  width: 100%;
+  display: flex;
+}
