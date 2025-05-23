@@ -11,12 +11,16 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const form = document.querySelector('.form');
+const submitButton = form?.querySelector('button[type="submit"]');
 
-form.addEventListener('submit', onFormSubmit);
+document.addEventListener('DOMContentLoaded', () => {
+  enableSubmitButton();
+});
 
-function onFormSubmit(event) {
+form.addEventListener('submit', handleFormSubmit);
+
+function handleFormSubmit(event) {
   event.preventDefault();
-  clearGallery();
   const query = event.target.elements['search-text'].value.trim();
 
   if (!query) {
@@ -24,12 +28,12 @@ function onFormSubmit(event) {
     return;
   }
 
+  disableSubmitButton();
+  clearGallery();
   showLoader();
 
   getImagesByQuery(query)
     .then(({ hits }) => {
-      hideLoader();
-
       if (hits.length === 0) {
         showError(
           'Sorry, there are no images matching your search query. Please, try again!'
@@ -41,21 +45,21 @@ function onFormSubmit(event) {
       initLightbox();
     })
     .catch(error => {
-      hideLoader();
       showError(`${error.message}. Please try again later.`);
     })
     .finally(() => {
+      hideLoader();
+      enableSubmitButton();
       form.reset();
     });
 }
 
 function initLightbox() {
-  const lightbox = new SimpleLightbox('.gallery a', {
+  new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
     captionDelay: 250,
     scrollZoom: false,
-  });
-  lightbox.refresh();
+  }).refresh();
 }
 
 function showError(message) {
@@ -64,4 +68,16 @@ function showError(message) {
     position: 'topRight',
     maxWidth: 432,
   });
+}
+
+function disableSubmitButton() {
+  if (submitButton) {
+    submitButton.disabled = true;
+  }
+}
+
+function enableSubmitButton() {
+  if (submitButton) {
+    submitButton.disabled = false;
+  }
 }

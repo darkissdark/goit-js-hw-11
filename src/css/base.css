@@ -40,6 +40,10 @@ button {
   letter-spacing: inherit;
 }
 
+button[disabled] {
+  cursor: wait;
+}
+
 input {
   width: 100%;
   padding: 7px 16px;

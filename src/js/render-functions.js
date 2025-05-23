@@ -6,6 +6,17 @@ export function createGallery(images) {
 
   const markup = images.map(createGalleryItemMarkup).join('');
   gallery.insertAdjacentHTML('beforeend', markup);
+
+  const imagesOnload = gallery.querySelectorAll('.gallery__image');
+  imagesOnload.forEach(img => {
+    img.addEventListener(
+      'load',
+      () => {
+        img.parentElement.classList.add('loaded');
+      },
+      { once: true }
+    );
+  });
 }
 
 function createGalleryItemMarkup({
